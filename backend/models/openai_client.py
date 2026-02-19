@@ -1,6 +1,7 @@
 import time
 from typing import Awaitable, Callable, List
 from openai import AsyncOpenAI
+import os
 from openai.types.chat import ChatCompletionMessageParam, ChatCompletionChunk
 from llm import Completion
 
@@ -17,15 +18,19 @@ async def stream_openai_response(
 
     # Base parameters
     params = {
-        "model": model_name,
+        "model": os.getenv("OPENAI_MODEL_OVERRIDE", model_name),
         "messages": messages,
         "timeout": 600,
     }
 
+    # streaming control (some local endpoints don't support it)
+    disable_stream = os.getenv("OPENAI_STREAM_DISABLED", "").lower() in ("1", "true", "yes")
+
     # O1 doesn't support streaming or temperature
     if model_name not in ["o1-2024-12-17", "o4-mini-2025-04-16", "o3-2025-04-16"]:
         params["temperature"] = 0
-        params["stream"] = True
+        if not disable_stream:
+            params["stream"] = True
 
     # 4.1 series
     if model_name in [
@@ -52,10 +57,13 @@ async def stream_openai_response(
         params["reasoning_effort"] = "high"
 
     # O1 doesn't support streaming
-    if model_name == "o1-2024-12-17":
+    if model_name == "o1-2024-12-17" or disable_stream:
+        # Non‑streaming call
+        params.pop("stream", None)
         response = await client.chat.completions.create(**params)  # type: ignore
-        full_response = response.choices[0].message.content  # type: ignore
+        full_response = response.choices[0].message.content or ""  # type: ignore
     else:
+        # Streaming call
         stream = await client.chat.completions.create(**params)  # type: ignore
         full_response = ""
         async for chunk in stream:  # type: ignore

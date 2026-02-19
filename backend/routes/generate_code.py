@@ -401,6 +401,9 @@ class ModelSelectionStage:
         return selected_models
 
 
+import os
+
+
 class PromptCreationStage:
     """Handles prompt assembly for code generation"""
 
@@ -422,7 +425,8 @@ class PromptCreationStage:
                 is_imported_from_code=extracted_params.is_imported_from_code,
             )
 
-            print_prompt_summary(prompt_messages, truncate=False)
+            if os.getenv("S2C_LOG_VERBOSE", "").lower() in ("1", "true", "yes"):
+                print_prompt_summary(prompt_messages, truncate=False)
 
             return prompt_messages, image_cache
         except Exception:
