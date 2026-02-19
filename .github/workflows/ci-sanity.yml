@@ -39,13 +39,13 @@ jobs:
           done
 
       - name: Setup Node.js
-        if: ${{ hashFiles("package.json") != "" || hashFiles("*.js") != "" }}
+        if: ${{ hashFiles('package.json') != '' || hashFiles('*.js') != '' }}
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - name: JavaScript lint/test
-        if: ${{ hashFiles("package.json") != "" }}
+        if: ${{ hashFiles('package.json') != '' }}
         run: |
           set -euo pipefail
           if [ -f package-lock.json ]; then
@@ -57,7 +57,7 @@ jobs:
           npm test --if-present
 
       - name: JavaScript syntax check (standalone)
-        if: ${{ hashFiles("package.json") == "" && hashFiles("*.js") != "" }}
+        if: ${{ hashFiles('package.json') == '' && hashFiles('*.js') != '' }}
         run: |
           set -euo pipefail
           mapfile -t js_files < <(find . -maxdepth 1 -type f -name "*.js")
@@ -67,13 +67,13 @@ jobs:
           done
 
       - name: Setup Python
-        if: ${{ hashFiles("pyproject.toml") != "" || hashFiles("requirements.txt") != "" || hashFiles("requirements-web.txt") != "" }}
+        if: ${{ hashFiles('pyproject.toml') != '' || hashFiles('requirements.txt') != '' || hashFiles('requirements-web.txt') != '' }}
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Python sanity checks
-        if: ${{ hashFiles("pyproject.toml") != "" || hashFiles("requirements.txt") != "" || hashFiles("requirements-web.txt") != "" }}
+        if: ${{ hashFiles('pyproject.toml') != '' || hashFiles('requirements.txt') != '' || hashFiles('requirements-web.txt') != '' }}
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
