@@ -11,6 +11,13 @@ services:
     command: poetry run uvicorn main:app --host 0.0.0.0 --port ${BACKEND_PORT:-7001}
     restart: unless-stopped
   frontend:
+    labels:
+      - "homepage.group=K11 Apps"
+      - "homepage.name=Screenshot to Code"
+      - "homepage.icon=mdi-image-edit"
+      - "homepage.href=https://gmktec-k11.tailfc2bce.ts.net:5173/"
+      - "homepage.description=Screenshot-to-code frontend"
+      - "homepage.weight=650"
     build:
       context: ./frontend
       dockerfile: Dockerfile
