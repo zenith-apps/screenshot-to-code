@@ -15,7 +15,7 @@ services:
       - "homepage.group=K11 Apps"
       - "homepage.name=Screenshot to Code"
       - "homepage.icon=mdi-image-edit"
-      - "homepage.href=https://gmktec-k11.tailfc2bce.ts.net:5173/"
+      - "homepage.href=https://gmktec-k11.tailfc2bce.ts.net:5173/index.html"
       - "homepage.description=Screenshot-to-code frontend"
       - "homepage.weight=650"
     build:
